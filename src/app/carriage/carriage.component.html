@@ -1,0 +1,182 @@
+<div >
+  <mat-card style="background-color: #123f69">
+    <mat-card-title>
+      <h5>Carriage CRUD</h5>
+    </mat-card-title>
+    <mat-card-content>
+      <ul class="carriages">
+        <li (click)="OpenAddElem()">
+          <span class="badge">Add</span>
+        </li>
+      </ul>
+
+      <ul class="carriages" >
+        <li  *ngFor ="let carriage of carriages"   style="display: flex; justify-content: space-between; background-color:darkblue">
+
+          <span class="badge" id="span1" style="background-color: brown"> {{carriage.id}}</span>{{carriage.CarriageName}}
+
+          <span class="badge" style="position: relative;right: 15em; background-color: brown" (click)="DeleteElement(carriage.id)">Delete</span>
+          <span class="badge" style="background-color: brown" (click)="Detail(carriage)">Detail</span>
+          <span class="badge" style="background-color: brown"  (click)="onSelected(carriage)">Edit</span>
+
+        </li>
+      </ul>
+      <div class="Desc" *ngIf="selectedFlag" [hidden]="submitted">
+        <h3 style="color: palegreen; display: flex; justify-content: center">{{selected.CarriageName}}</h3>
+        <div class = "container">
+          <form #carriageForm="ngForm" (ngSubmit)="Edit(selected.id, selected.CarriageName, selected.CarriageNumber, CarriageStatus.value)">
+            <div class="form-group" >
+              <label for="CarriageName" >Name </label>
+              <input type="text" class="form-control" id="CarriageName"
+              required minlength="4" maxlength="50" [(ngModel)]="selected.CarriageName" [ngModelOptions]="{standalone: false}" name="CarriageName" #CarriageName = "ngModel"
+              >
+              <div [hidden]="CarriageName.valid || CarriageName.pristine" class="alert alert-danger">
+                Required
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="CarriageNumber">Number: </label>
+              <input type="text" class="form-control" id="CarriageNumber"
+              required minlength="8" maxlength="8" [(ngModel)]="buffer"  name="CarriageNumber" #Buff = "ngModel"
+              >
+              <div [hidden]="Buff.valid||Buff.pristine" class="alert alert-danger">
+                Обязательно к заполнению.Длина не больше и не меньше 8
+              </div>
+            </div>
+<!--            <div>-->
+<!--              <label for="SelectStatus">Select status</label>-->
+<!--              <select class="form-control" name="SelectStatus" id="SelectStatus" required [(ngModel)]="selectStatus" [ngModelOptions]="{standalone: true}" #SelectStatuss = "ngModel">-->
+<!--                <option *ngFor="let sss of selectStatus" [value]="sss">{{sss}}</option>-->
+<!--              </select>-->
+<!--              <div [hidden]="SelectStatuss.valid||SelectStatuss.pristine" class="alert alert-danger">-->
+<!--                Обязательно к выбору-->
+<!--              </div>-->
+<!--            </div>-->
+            <div class="form-group">
+              <label for="CarriageStatus">Status: </label>
+              <input type="text" class="form-control" id="CarriageStatus"
+                     required minlength="4" maxlength="15" [(ngModel)]="selected.CarriageStatus" name="CarriageStatus" #CarriageStatus = "ngModel"
+              >
+              <div [hidden]="CarriageStatus.valid||CarriageStatus.pristine" class="alert alert-danger">
+                Обязательно к запонениею, не меньше 4 и не более 15
+              </div>
+            </div>
+            <button type="submit" [disabled]="!carriageForm.form.valid" class="btn btn-success">Submit</button>
+<!--            <label style="color: palegreen">Carriage:-->
+<!--              <input class="inp" [(ngModel)]="selected.CarriageName" placeholder="CarriageName"/>-->
+<!--              <input class="inp" [(ngModel)]="selected.CarriageNumber" placeholder="CarriageNumber"/>-->
+<!--              <input class="inp" [(ngModel)]="selected.CarriageStatus" placeholder="CarriageStatus"/>-->
+<!--              <button (click)="Edit(selected.id, selected.CarriageName, selected.CarriageNumber,selected.CarriageStatus)">OK</button>-->
+<!--            </label>-->
+          </form>
+<!--          <label style="color: palegreen">Carriage:-->
+<!--            <input class="inp" [(ngModel)]="selected.CarriageName" placeholder="CarriageName"/>-->
+<!--            <input class="inp" [(ngModel)]="selected.CarriageNumber" placeholder="CarriageNumber"/>-->
+<!--            <input class="inp" [(ngModel)]="selected.CarriageStatus" placeholder="CarriageStatus"/>-->
+<!--            <button (click)="Edit(selected.id, selected.CarriageName, selected.CarriageNumber,selected.CarriageStatus)">OK</button>-->
+<!--          </label>-->
+        </div>
+      </div>
+      <div class="Desc" *ngIf="detailFlag">
+        <h3 style="color: palegreen; display: flex; justify-content: center">{{detailCarriage.CarriageName}}</h3>
+        <div>
+          <label>Color name:
+            <ul>
+              <li>Id = {{detailCarriage.id}}</li>
+              <li>Name = {{detailCarriage.CarriageName}}</li>
+              <li>Number = {{detailCarriage.CarriageNumber}}</li>
+              <li>Status = {{detailCarriage.CarriageStatus}}</li>
+              <li>Summa = {{detailCarriage.CarriageSum}}</li>
+              <li>First type = {{detailCarriage.CarriageTypeFirst}}</li>
+              <li>Second type = {{detailCarriage.CarriageTypeSecond}}</li>
+              <li>Third type = {{detailCarriage.CarriageTypeThird}}</li>
+              <li>Fourth to six type = {{detailCarriage.CarriageTypeFourthToSix}}</li>
+              <li>Sevens type = {{detailCarriage.CarriageTypeSevens}}</li>
+              <li>Eights type = {{detailCarriage.CarriageTypeEights}}</li>
+            </ul>
+          </label>
+        </div>
+      </div>
+      <div class="Desc" *ngIf="addElemFlag">
+        <h5></h5>
+        <div class = "form-group">
+<!--          <form name="myForm" required>-->
+<!--            <mat-form-field class="example-form-field">-->
+<!--              <mat-label>Наименование производителя</mat-label>-->
+<!--              <input matInput type="text" [(ngModel)]="addElem.CarriageName">-->
+<!--              <button mat-button *ngIf="addElem.CarriageName" matSuffix mat-icon-button aria-label="Clear" (click)="addElem.CarriageName=''">-->
+<!--                <mat-icon>close</mat-icon>-->
+<!--              </button>-->
+<!--            </mat-form-field>-->
+            <form [formGroup]="formAdd" >
+              <mat-form-field
+                class="example-form-field"
+                [ngClass]="{invalid: formAdd.get('name').touched && formAdd.get('name').invalid}"
+              >
+                <mat-label>Наименование</mat-label>
+                <input matInput id="nameMan" type="text" formControlName="name" #itemName>
+                <mat-error *ngIf="formAdd.get('name').touched && formAdd.get('name').invalid">
+                  <small *ngIf="formAdd.get('name').errors.required">Поле обязательно для заполенения</small><br>
+                  <small *ngIf="!formAdd.get('name').errors.maxLength">Поле не должно превышать 50 символов</small>
+                </mat-error>
+              </mat-form-field>
+              <mat-form-field
+                class="example-form-field"
+                [ngClass]="{invalid: formAdd.get('numb').touched && formAdd.get('numb').invalid}"
+              >
+                <mat-label>Номер Вагона</mat-label>
+                <input matInput id="nameNumber" type="text" formControlName="numb" #itemNumber>
+                <mat-error *ngIf="formAdd.get('numb').touched && formAdd.get('numb').invalid">
+
+                  <small *ngIf="formAdd.get('numb').errors.required">Поле обязательно для заполенения</small><br>
+                  <small *ngIf="!formAdd.get('numb').errors.maxLength">Поле не более и не менее 8 символов</small>
+<!--                  <small *ngIf="!formAdd.get('numb').errors.minLength">Поле не должно быть меньше 8 символов</small>-->
+                </mat-error>
+              </mat-form-field>
+              <mat-form-field
+                class="example-form-field"
+                [ngClass]="{invalid: formAdd.get('status').touched && formAdd.get('status').invalid}"
+              >
+                <mat-label>Номер производителя</mat-label>
+                <input matInput id="nameStatus" type="text" formControlName="status" #itemStatus>
+                <mat-error *ngIf="formAdd.get('status').touched && formAdd.get('status').invalid">
+                  <small *ngIf="formAdd.get('status').errors.required">Поле обязательно для заполенения</small><br>
+                  <small *ngIf="!formAdd.get('status').errors.maxLength">Поле не должно превышать 50 символов</small>
+                </mat-error>
+              </mat-form-field>
+              <button class="btn btn-dark" type="submit"
+                      (click)="AddElement(itemName.value,itemNumber.value,itemStatus.value)"
+                      [disabled]="formAdd.invalid"
+            >Add</button>
+            </form>
+
+
+
+<!--            <label>Carriage name:-->
+<!--&lt;!&ndash;              <input class="inp" required minlength="4" placeholder="Carriage Name" type = "text" id="name" name="name" #itemName/>&ndash;&gt;-->
+<!--              <input class="inp" placeholder="Carriage Number" type = "text" name="number" #itemNumber/>-->
+<!--              <input class="inp" placeholder="Carriage Status" type = "text" name="status" #itemStatus/>-->
+<!--&lt;!&ndash;              <button (click)="AddElement(itemName.value,itemNumber.value, itemStatus.value )">OK</button>&ndash;&gt;-->
+<!--            </label>-->
+<!--          </form>-->
+
+        </div>
+      </div>
+<!--      <div *ngIf="addElem.CarriageName.invalid && (name.dirty || name.touched)"-->
+<!--           class="alert alert-danger">-->
+
+<!--        <div *ngIf="name.errors.required">-->
+<!--          Name is required.-->
+<!--        </div>-->
+<!--        <div *ngIf="name.errors.minlength">-->
+<!--          Name must be at least 4 characters long.-->
+<!--        </div>-->
+<!--        <div *ngIf="name.errors.forbiddenName">-->
+<!--          Name cannot be Bob.-->
+<!--        </div>-->
+
+<!--      </div>-->
+
+    </mat-card-content>
+  </mat-card>
+</div>
